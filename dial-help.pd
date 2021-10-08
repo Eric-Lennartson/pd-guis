@@ -1,0 +1,23 @@
+#N canvas 520 170 565 404 12;
+#X msg 99 167 receive \\\$0-rcv;
+#X msg 91 116 send \\\$0-snd;
+#X floatatom 279 180 5 0 0 0 - - -;
+#X floatatom 285 239 5 0 0 0 - - -;
+#X obj 405 226 r \$0-snd;
+#X floatatom 405 250 5 0 0 0 - - -;
+#X floatatom 371 120 5 0 0 0 - - -;
+#X obj 371 143 s rcv;
+#X obj 123 237 dial __EMPTY__ #0-snd #0-rcv __EMPTY__ 60 220 -40 8
+3 0 0 0 2 0 100 1 4 0.01 2.5 3 3;
+#X obj 280 203 s \$0-rcv;
+#X msg 123 191 receive my_rcv;
+#X obj 285 262 s my_rcv;
+#X text 48 53 make note that when switching b/w infinite and not inf
+\, the value of the dial changes;
+#X connect 0 0 8 0;
+#X connect 1 0 8 0;
+#X connect 2 0 9 0;
+#X connect 3 0 11 0;
+#X connect 4 0 5 0;
+#X connect 6 0 7 0;
+#X connect 10 0 8 0;
