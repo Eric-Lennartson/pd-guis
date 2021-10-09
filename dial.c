@@ -236,8 +236,6 @@ static void key_listener_list(t_key_listener* listener, t_symbol *s, int argc, t
             x->receive_input = !x->receive_input;
 
             if(x->receive_input && glist_isvisible(x->glist) && gobj_shouldvis((t_gobj *)x, x->glist)) {
-                post("called thumbhighlight in listener_list");
-
                 sys_vgui(".x%lx.c itemconfigure %lxTHUMBHIGHLIGHT -fill [::pdtk_canvas::get_color %s .x%lx]\n",
                     x->glist, x, "dial_thumb_highlight", x->glist);
             } else {
@@ -315,125 +313,129 @@ static void tooltip_erase(t_tooltip *this)
 static void tooltip_draw(t_tooltip *this, t_glist *glist)
 {
     t_dial *owner = this->owner;
-    owner->xpos = text_xpix(&owner->obj, glist);
-    owner->ypos = text_ypix(&owner->obj, glist);
 
-    int text_xpos, text_ypos;
-    char* text = value_to_str( dial_map_output(owner) );
-    tooltip_text_pos(this, glist, text, &text_xpos, &text_ypos);
-
-    if(this->visible) {
-        tooltip_erase(this);
-    }
-
-    t_glist *cnv = owner->glist;
-
-    switch(this->position)
+    if(glist_isvisible(owner->glist) && gobj_shouldvis((t_gobj *)owner, owner->glist))
     {
-        case TOP:
-        {
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
-                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
-                     cnv,
-                     owner->xpos + owner->size/2, owner->ypos - TTIP_EDGE_OFFSET,                                      // triangle tip
-                     owner->xpos + owner->size/2 - (int)(( 5/tan(M_PI/6) )-2), owner->ypos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET,      // tip left
-                     owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,  // bot left
-                     owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET - TTIP_SIZE, // top left
-                     owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET - TTIP_SIZE, // top right
-                     owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,  // bot right
-                     owner->xpos + owner->size/2 + (int)(( 5/tan(M_PI/6) )-2), owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,      // tip right
-                     owner->zoom_factor,
-                     "tooltip_border", cnv,
-                     "tooltip_fill", cnv, owner);
+        owner->xpos = text_xpix(&owner->obj, glist);
+        owner->ypos = text_ypix(&owner->obj, glist);
 
-            sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
-                -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
-                cnv,
-                text_xpos, text_ypos,
-                text, "menlo", 12, sys_fontweight,
-                "tooltip_text", cnv,
-                owner);
-            break;
+        int text_xpos, text_ypos;
+        char* text = value_to_str( dial_map_output(owner) );
+        tooltip_text_pos(this, glist, text, &text_xpos, &text_ypos);
+
+        if(this->visible) {
+            tooltip_erase(this);
         }
 
-        case RIGHT:
-        {
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
-                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
-                     cnv,
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET, owner->ypos + owner->size/2,                                                           // triangle tip
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2,                              // tip top
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET,                            // top left
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + this->width + TTIP_LR_MARGIN, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET, // top right
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + this->width + TTIP_LR_MARGIN, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET, // bot right
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
-                     owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
-                     owner->zoom_factor,
-                     "tooltip_border", cnv,
-                     "tooltip_fill", cnv, owner);
+        t_glist *cnv = owner->glist;
 
-            sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
-                -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
-                cnv,
-                text_xpos, text_ypos,
-                text, "menlo", 12, sys_fontweight,
-                "tooltip_text", cnv,
-                owner);
-            break;
-        }
-        case LEFT:
+        switch(this->position)
         {
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
-                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
-                     cnv,
-                     owner->xpos - TTIP_EDGE_OFFSET, owner->ypos + owner->size/2,                                                           // triangle tip
-                     owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2,                              // tip top
-                     owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET,                            // top left
-                     owner->xpos - TTIP_EDGE_OFFSET - this->width - TTIP_LR_MARGIN, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET, // top right
-                     owner->xpos - TTIP_EDGE_OFFSET - this->width - TTIP_LR_MARGIN, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET, // bot right
-                     owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
-                     owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
-                     owner->zoom_factor,
-                     "tooltip_border", cnv,
-                     "tooltip_fill", cnv, owner);
+            case TOP:
+            {
+                sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
+                        "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
+                        cnv,
+                        owner->xpos + owner->size/2, owner->ypos - TTIP_EDGE_OFFSET,                                      // triangle tip
+                        owner->xpos + owner->size/2 - (int)(( 5/tan(M_PI/6) )-2), owner->ypos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET,      // tip left
+                        owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,  // bot left
+                        owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET - TTIP_SIZE, // top left
+                        owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET - TTIP_SIZE, // top right
+                        owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,  // bot right
+                        owner->xpos + owner->size/2 + (int)(( 5/tan(M_PI/6) )-2), owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,      // tip right
+                        owner->zoom_factor,
+                        "tooltip_border", cnv,
+                        "tooltip_fill", cnv, owner);
 
-            sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
-                -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
-                cnv,
-                text_xpos, text_ypos,
-                text, "menlo", 12, sys_fontweight,
-                "tooltip_text", cnv,
-                owner);
-            break;
-        }
-        case BOT:
-        {
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
-                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
-                     cnv,
-                     owner->xpos + owner->size/2, owner->ypos + owner->size + TTIP_EDGE_OFFSET,                                             // triangle tip
-                     owner->xpos + owner->size/2 - (int)(( 5/tan(to_radians(30.0)) )-2), owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,  // tip left
-                     owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,        // top left
-                     owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_SIZE,       // bot left
-                     owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_SIZE,       // bot right
-                     owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,        // top right
-                     owner->xpos + owner->size/2 + (int)(( 5/tan(to_radians(30.0)) )-2),  owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, // tip right
-                     owner->zoom_factor,
-                     "tooltip_border", cnv,
-                     "tooltip_fill", cnv, owner);
+                sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
+                    -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
+                    cnv,
+                    text_xpos, text_ypos,
+                    text, "menlo", 12, sys_fontweight,
+                    "tooltip_text", cnv,
+                    owner);
+                break;
+            }
 
-            sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
-                -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
-                cnv,
-                text_xpos, text_ypos,
-                text, "menlo", 12, sys_fontweight,
-                "tooltip_text", cnv,
-                owner);
-            break;
+            case RIGHT:
+            {
+                sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
+                        "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
+                        cnv,
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET, owner->ypos + owner->size/2,                                                           // triangle tip
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2,                              // tip top
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET,                            // top left
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + this->width + TTIP_LR_MARGIN, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET, // top right
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + this->width + TTIP_LR_MARGIN, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET, // bot right
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
+                        owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
+                        owner->zoom_factor,
+                        "tooltip_border", cnv,
+                        "tooltip_fill", cnv, owner);
+
+                sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
+                    -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
+                    cnv,
+                    text_xpos, text_ypos,
+                    text, "menlo", 12, sys_fontweight,
+                    "tooltip_text", cnv,
+                    owner);
+                break;
+            }
+            case LEFT:
+            {
+                sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
+                        "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
+                        cnv,
+                        owner->xpos - TTIP_EDGE_OFFSET, owner->ypos + owner->size/2,                                                           // triangle tip
+                        owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2,                              // tip top
+                        owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET,                            // top left
+                        owner->xpos - TTIP_EDGE_OFFSET - this->width - TTIP_LR_MARGIN, owner->ypos + owner->size/2 - (int)(5*tan(M_PI/6))-2-TTIP_TIP_OFFSET, // top right
+                        owner->xpos - TTIP_EDGE_OFFSET - this->width - TTIP_LR_MARGIN, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET, // bot right
+                        owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
+                        owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
+                        owner->zoom_factor,
+                        "tooltip_border", cnv,
+                        "tooltip_fill", cnv, owner);
+
+                sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
+                    -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
+                    cnv,
+                    text_xpos, text_ypos,
+                    text, "menlo", 12, sys_fontweight,
+                    "tooltip_text", cnv,
+                    owner);
+                break;
+            }
+            case BOT:
+            {
+                sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
+                        "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
+                        cnv,
+                        owner->xpos + owner->size/2, owner->ypos + owner->size + TTIP_EDGE_OFFSET,                                             // triangle tip
+                        owner->xpos + owner->size/2 - (int)(( 5/tan(to_radians(30.0)) )-2), owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,  // tip left
+                        owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,        // top left
+                        owner->xpos + owner->size/2 - this->width/2 - TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_SIZE,       // bot left
+                        owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_SIZE,       // bot right
+                        owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,        // top right
+                        owner->xpos + owner->size/2 + (int)(( 5/tan(to_radians(30.0)) )-2),  owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, // tip right
+                        owner->zoom_factor,
+                        "tooltip_border", cnv,
+                        "tooltip_fill", cnv, owner);
+
+                sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
+                    -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
+                    cnv,
+                    text_xpos, text_ypos,
+                    text, "menlo", 12, sys_fontweight,
+                    "tooltip_text", cnv,
+                    owner);
+                break;
+            }
         }
+        this->visible = true;
+        free(text);
     }
-    this->visible = true;
-    free(text);
 }
 // END TOOLTIP FUNCTIONS ===========================================================================================
 // START DRAWING FUNCTIONS =========================================================================================
@@ -711,7 +713,6 @@ static void dial_update(t_dial *x, t_glist *glist)
     }
 }
 static void dial_zoom(t_dial *x, t_floatarg zoom) {
-    post("called");
     x->zoom_factor = (int)zoom;
 }
 // END DRAWING FUNCTIONS ==========================================================================================
@@ -872,7 +873,6 @@ static t_float dial_snap_angle(t_dial *this)
 }
 static void dial_mouserelease(t_dial *x) {
     if(glist_isvisible(x->glist) && gobj_shouldvis((t_gobj *)x, x->glist)) {
-        post("called thumbhighlight in mouse_release");
         sys_vgui(".x%lx.c itemconfigure %lxTHUMBHIGHLIGHT -fill \"\" \n", x->glist, x);
         if(x->show_ttip)
             tooltip_erase(x->ttip);
