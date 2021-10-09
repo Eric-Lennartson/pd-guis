@@ -9,6 +9,7 @@ Thumbs.db
 #Files for me
 .vscode
 main.pd
+/build
 
 #Post Compilation Files
 *.pd_linux

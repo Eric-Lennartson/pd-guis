@@ -8,8 +8,6 @@ lib.name = gui
 #add /Headers to the search path
 # cflags = -I Headers
 
-# A_Math  := Headers/audio_math.c
-
 # Sources: ##############################################################
 
 dial.class.sources := dial.c
@@ -18,10 +16,11 @@ dial.class.sources := dial.c
 
 # helpfiles, abstractions, readme
 
-# datafiles = \
-# $(wildcard Classes/Abstractions/*.pd) \
-# $(wildcard Help-files/*.pd) \
-# README.md
+datafiles = \
+$(wildcard *-plugin.tcl) \
+$(wildcard *-help.pd) \
+LICENSE \
+README.md
 
 #########################################################################
 
