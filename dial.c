@@ -235,7 +235,9 @@ static void key_listener_list(t_key_listener* listener, t_symbol *s, int argc, t
         if(!press_state && 0 == strcmp(x->hotkey->s_name, key.s_name)) {
             x->receive_input = !x->receive_input;
 
-            if(x->receive_input) {
+            if(x->receive_input && glist_isvisible(x->glist) && gobj_shouldvis((t_gobj *)x, x->glist)) {
+                post("called thumbhighlight in listener_list");
+
                 sys_vgui(".x%lx.c itemconfigure %lxTHUMBHIGHLIGHT -fill [::pdtk_canvas::get_color %s .x%lx]\n",
                     x->glist, x, "dial_thumb_highlight", x->glist);
             } else {
@@ -869,9 +871,12 @@ static t_float dial_snap_angle(t_dial *this)
     return angle;
 }
 static void dial_mouserelease(t_dial *x) {
-    sys_vgui(".x%lx.c itemconfigure %lxTHUMBHIGHLIGHT -fill \"\" \n", x->glist, x);
-    if(x->show_ttip)
-        tooltip_erase(x->ttip);
+    if(glist_isvisible(x->glist) && gobj_shouldvis((t_gobj *)x, x->glist)) {
+        post("called thumbhighlight in mouse_release");
+        sys_vgui(".x%lx.c itemconfigure %lxTHUMBHIGHLIGHT -fill \"\" \n", x->glist, x);
+        if(x->show_ttip)
+            tooltip_erase(x->ttip);
+    }
 }
 static void dial_motion(t_dial *x, t_floatarg dx, t_floatarg dy)
 {
