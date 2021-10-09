@@ -3,7 +3,7 @@
 ############
 
 # library name
-lib.name = gui
+lib.name = guis
 
 #add /Headers to the search path
 # cflags = -I Headers
