@@ -10,11 +10,12 @@ Extra guis for puredata. Currently only compatible for pdnext.
 
 ###   About guis
 
-​guis requires using pdnext. The colors are set using the tcl file that is used to theme pdnext.
-A default darkmode theme is included in the repository. In the future I hope to add more guis, but for now
-it will just be the dial. Don't cross your fingers.
+​guis requires using pdnext. The colors are set using the tcl file that is used to theme pdnext. A default darkmode theme is included in the repository. In the future I hope to add more guis, but for now it will just be the dial. Don't cross your fingers.
+
 The repository for pdnext can be found here <https://github.com/sebshader/pdnext>.
-​This library's repository resides at <https://github.com/Eric-Lennartson/pd-guis/>.
+
+This library's repository resides at <https://github.com/Eric-Lennartson/pd-guis/>.
+
 A repository for more themes for pdnext can be found here <https://github.com/Eric-Lennartson/pd-themes>.
 
 --------------------------------------------------------------------------
@@ -54,7 +55,7 @@ and reload pdnext for the changes to take effect.
 - dial_track
 - dial_ticks
 - dial_thumb
-- dial_thumb_highlight (highlight for the dial, shown when dial is active)
+- dial_thumb_highlight (highlight for the dial, shown on thumb when dial is active)
 - dial_active (contrasting region showing the area the dial has already covered)
 - dial_label
 - tooltip_fill
