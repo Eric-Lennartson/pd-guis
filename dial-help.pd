@@ -1,23 +1,182 @@
-#N canvas 520 170 565 404 12;
-#X msg 99 167 receive \\\$0-rcv;
-#X msg 91 116 send \\\$0-snd;
-#X floatatom 279 180 5 0 0 0 - - -;
-#X floatatom 285 239 5 0 0 0 - - -;
-#X obj 405 226 r \$0-snd;
-#X floatatom 405 250 5 0 0 0 - - -;
-#X floatatom 371 120 5 0 0 0 - - -;
-#X obj 371 143 s rcv;
-#X obj 123 237 dial __EMPTY__ #0-snd #0-rcv __EMPTY__ 60 220 -40 8
-3 0 0 0 2 0 100 1 4 0.01 2.5 3 3;
-#X obj 280 203 s \$0-rcv;
-#X msg 123 191 receive my_rcv;
-#X obj 285 262 s my_rcv;
-#X text 48 53 make note that when switching b/w infinite and not inf
-\, the value of the dial changes;
-#X connect 0 0 8 0;
-#X connect 1 0 8 0;
-#X connect 2 0 9 0;
-#X connect 3 0 11 0;
+#N canvas 142 23 478 755 12;
+#X declare -lib guis;
+#X text 4 389 ============================================================inlets
+;
+#X text 4 441 ============================================================outlets
+;
+#X text 29 475 1) float - value;
+#X text 29 423 1) float \, bang - value;
+#X text 5 541 Optional messages to send to the first inlet.;
+#X text 1 504 ============================================================messages
+;
+#X text 6 575 1) hotkey <symbol> - set the hotkey to the specified
+symbol;
+#X text 6 605 2) label <symbol> - set the label to the specified symbol
+;
+#X text 6 635 3) set <float> - set the value of the dial w/o outputing
+it;
+#X text 190 667 set the number of ticks when in discrete mode to the
+specified value. Ticks can range from 3-50., f 38;
+#X text 6 668 4) ticks <float> -;
+#X text 6 728 5) start <symbol> -;
+#X text 190 802 toggle discrete mode on or off. 0 for off \, non 0
+for on., f 35;
+#X text 6 802 6) discrete <float> -;
+#X text 6 918 8) drag <symbol> -;
+#X text 191 916 set the drag mode when using the mouse to control the
+dial. options are H_DRAG \, V_DRAG \, HV_DRAG \, and R_DRAG., f 35
+;
+#X text 190 998 set the range of the dial to the given floats., f
+32;
+#X text 6 998 9) range <float \, float> -;
+#X text 6 1058 10) size <float> -;
+#X text 190 1058 set the size of the dial. Size can range from 20-300.
+, f 35;
+#X text 6 1108 11) send <symbol> -;
+#X text 190 1108 set a symbol to send the dials value to., f 35;
+#X text 6 1148 12) receive <symbol> -;
+#X text 190 1148 set a symbol for the dial to receive messages from.
+, f 35;
+#X obj 295 10 declare -lib guis;
+#X obj 30 92 guis/dial h __EMPTY__ __EMPTY__ control_me_by_pressing_h
+60 220 -40 8 3 0 0 0 2 0 100 1 1 0.01 2.5 3 4;
+#X text 6 852 7) infinite <float> -;
+#X obj 87 233 dial __EMPTY__ __EMPTY__ __EMPTY__ small_dial 30 220
+-40 8 1 1 0 0 2 0 100 1 3 0.01 2.5 3 4;
+#X obj 303 120 dial __EMPTY__ __EMPTY__ __EMPTY__ no_tooltip 90 180
+0 8 3 0 1 0 2 0 100 0 4 0.01 2.5 3 2;
+#X text 5 347 See the properties panel for more options to style the
+dial.;
+#X text 190 852 toggle infinite mode on or off. 0 for off \, non 0
+for on. Note that this will change the dials value., f 35;
+#X text 190 731 set the start position for the dial thumb. options
+are top \, bot \, left \, and middle. Note that this also resets the
+dial to the start position., f 38;
+#X text 1 1194 ========================================================================================================================
+;
+#N canvas 343 122 723 429 messages_examples 0;
+#X symbolatom 28 28 2 0 0 0 - - -;
+#X msg 28 51 hotkey \$1;
+#X symbolatom 118 28 10 0 0 0 - - -;
+#X msg 118 51 label \$1;
+#X floatatom 211 27 5 0 0 0 - - -;
+#X msg 211 50 set \$1;
+#X obj 29 203 dial a __EMPTY__ __EMPTY__ __EMPTY__ 84 220 -40 3 2 0
+0 0 0 0 100 1 4 0.01 2.5 3 3;
+#X floatatom 310 26 5 3 50 0 - - -;
+#X msg 310 49 ticks \$1;
+#X obj 419 23 hradio 18 1 0 4 empty empty empty -1 -10 0 12 -91412
+-174938 -203556 0;
+#N canvas 0 23 450 300 options 0;
+#X obj 37 37 inlet;
+#X obj 37 61 sel 0 1 2 3;
+#X msg 37 195 symbol left;
+#X obj 37 239 outlet;
+#X msg 55 155 symbol right;
+#X msg 74 125 symbol top;
+#X msg 92 95 symbol bot;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 4 0;
+#X connect 1 2 5 0;
+#X connect 1 3 6 0;
+#X connect 2 0 3 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X restore 419 46 pd options;
+#X msg 419 103 start \$1;
+#X obj 521 25 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
+-203556 0 1;
+#X msg 521 59 discrete \$1;
+#X obj 616 26 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
+-203556 0 1;
+#X msg 616 60 infinite \$1;
+#X obj 421 163 hradio 18 1 0 4 empty empty empty -1 -10 0 12 -91412
+-174938 -203556 0;
+#N canvas 0 23 450 300 options 0;
+#X obj 37 37 inlet;
+#X obj 37 61 sel 0 1 2 3;
+#X obj 37 239 outlet;
+#X msg 37 195 symbol H_DRAG;
+#X msg 55 155 symbol V_DRAG;
+#X msg 74 125 symbol HV_DRAG;
+#X msg 92 95 symbol R_DRAG;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 4 0;
+#X connect 1 2 5 0;
+#X connect 1 3 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X restore 421 186 pd options;
+#X msg 421 232 drag \$1;
+#X symbolatom 430 72 10 0 0 0 - - -;
+#X symbolatom 430 209 10 0 0 0 - - -;
+#X floatatom 210 117 5 0 0 0 - - -;
+#X floatatom 251 117 5 0 0 0 - - -;
+#X obj 251 141 t b f;
+#X obj 210 170 pack f f, f 11;
+#X msg 210 194 range \$1 \$2;
+#X floatatom 317 119 5 20 300 0 - - -;
+#X msg 317 142 size \$1;
+#X symbolatom 530 121 10 0 0 0 - - -;
+#X msg 530 144 send \$1;
+#X symbolatom 621 120 10 0 0 0 - - -;
+#X msg 621 143 receive \$1;
+#X obj 28 75 s \$0-dial;
+#X obj 29 135 r \$0-dial;
+#X obj 118 75 s \$0-dial;
+#X obj 211 74 s \$0-dial;
+#X obj 310 73 s \$0-dial;
+#X obj 419 127 s \$0-dial;
+#X obj 521 83 s \$0-dial;
+#X obj 616 84 s \$0-dial;
+#X obj 421 256 s \$0-dial;
+#X obj 210 218 s \$0-dial;
+#X obj 317 166 s \$0-dial;
+#X obj 530 168 s \$0-dial;
+#X obj 621 167 s \$0-dial;
+#X floatatom 29 360 5 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 1 0 32 0;
+#X connect 2 0 3 0;
+#X connect 3 0 34 0;
 #X connect 4 0 5 0;
-#X connect 6 0 7 0;
-#X connect 10 0 8 0;
+#X connect 5 0 35 0;
+#X connect 6 0 45 0;
+#X connect 7 0 8 0;
+#X connect 8 0 36 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 10 0 19 0;
+#X connect 11 0 37 0;
+#X connect 12 0 13 0;
+#X connect 13 0 38 0;
+#X connect 14 0 15 0;
+#X connect 15 0 39 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 17 0 20 0;
+#X connect 18 0 40 0;
+#X connect 21 0 24 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 23 1 24 1;
+#X connect 24 0 25 0;
+#X connect 25 0 41 0;
+#X connect 26 0 27 0;
+#X connect 27 0 42 0;
+#X connect 28 0 29 0;
+#X connect 29 0 43 0;
+#X connect 30 0 31 0;
+#X connect 31 0 44 0;
+#X connect 33 0 6 0;
+#X restore 283 258 pd messages_examples;
+#X text 8 34 [dial] is a rotary dial/knob style gui. To use it you
+must be using pdnext version of pd. (this is how the color scheming
+works).;
+#X text 6 304 Pressing shift allows for fine tuning of the dials value.
+Pressing command will allow for faster movement of the dial.;
