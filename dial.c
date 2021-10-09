@@ -1349,7 +1349,7 @@ static void dial_set_param(t_dial *this, t_symbol *s, int argc, t_atom *argv)
     this->size                  = (int)clamp( atom_getfloatarg(7, argc, argv), MIN_SIZE, MAX_SIZE);
     this->start_angle           = (int)clamp( atom_getfloatarg(8, argc, argv), MIN_START_ANGLE, MAX_START_ANGLE);
     this->end_angle             = (int)clamp( atom_getfloatarg(9, argc, argv), MIN_END_ANGLE, MAX_END_ANGLE);
-    this->start_position        = (int)atom_getfloatarg(10, argc, argv);
+    dial_set_start_position(this, (int)atom_getfloatarg(10, argc, argv));
     this->n_ticks               = (int)clamp( atom_getfloatarg(11, argc, argv), MIN_TICKS, MAX_TICKS);
     this->min                   = atom_getfloatarg(12, argc, argv);
     this->max                   = atom_getfloatarg(13, argc, argv);
