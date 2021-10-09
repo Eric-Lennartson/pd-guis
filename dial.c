@@ -341,8 +341,8 @@ static void tooltip_draw(t_tooltip *this, t_glist *glist)
                      owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,  // bot right
                      owner->xpos + owner->size/2 + (int)(( 5/tan(M_PI/6) )-2), owner->ypos - TTIP_EDGE_OFFSET -TTIP_TIP_OFFSET,      // tip right
                      owner->zoom_factor,
-                     "tooltip_fill", cnv,
-                     "tooltip_border", cnv, owner);
+                     "tooltip_border", cnv,
+                     "tooltip_fill", cnv, owner);
 
             sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
                 -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
@@ -367,8 +367,8 @@ static void tooltip_draw(t_tooltip *this, t_glist *glist)
                      owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
                      owner->xpos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
                      owner->zoom_factor,
-                     "tooltip_fill", cnv,
-                     "tooltip_border", cnv, owner);
+                     "tooltip_border", cnv,
+                     "tooltip_fill", cnv, owner);
 
             sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
                 -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
@@ -392,8 +392,8 @@ static void tooltip_draw(t_tooltip *this, t_glist *glist)
                      owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2+TTIP_TIP_OFFSET,                            // bot left
                      owner->xpos - TTIP_EDGE_OFFSET - TTIP_TIP_OFFSET, owner->ypos + owner->size/2 + (int)(5*tan(M_PI/6))+2,                              // tip bot
                      owner->zoom_factor,
-                     "tooltip_fill", cnv,
-                     "tooltip_border", cnv, owner);
+                     "tooltip_border", cnv,
+                     "tooltip_fill", cnv, owner);
 
             sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
                 -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
@@ -407,7 +407,7 @@ static void tooltip_draw(t_tooltip *this, t_glist *glist)
         case BOT:
         {
             sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d %d %d -width %d "
-                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -fill white -tags %lxTOOLTIP\n",
+                     "-outline [::pdtk_canvas::get_color %s .x%lx] -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP\n",
                      cnv,
                      owner->xpos + owner->size/2, owner->ypos + owner->size + TTIP_EDGE_OFFSET,                                             // triangle tip
                      owner->xpos + owner->size/2 - (int)(( 5/tan(to_radians(30.0)) )-2), owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,  // tip left
@@ -417,8 +417,8 @@ static void tooltip_draw(t_tooltip *this, t_glist *glist)
                      owner->xpos + owner->size/2 + this->width/2 + TTIP_TB_MARGIN, owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET,        // top right
                      owner->xpos + owner->size/2 + (int)(( 5/tan(to_radians(30.0)) )-2),  owner->ypos + owner->size + TTIP_EDGE_OFFSET + TTIP_TIP_OFFSET, // tip right
                      owner->zoom_factor,
-                     "tooltip_fill", cnv,
-                     "tooltip_border", cnv, owner);
+                     "tooltip_border", cnv,
+                     "tooltip_fill", cnv, owner);
 
             sys_vgui(".x%lx.c create text %d %d -text {%s} -justify center \
                 -font {{%s} -%d %s} -fill [::pdtk_canvas::get_color %s .x%lx] -tags %lxTOOLTIP_VALUE\n",
