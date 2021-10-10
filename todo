@@ -1,6 +1,5 @@
-- write up a readme
-- create a release
-- add to deken
+- fix bug when gui is in gop.
+    - probably do to a stale glist.
 
 Wish List (maybe come back and do these things)
     - potentially validate all input... maybe
