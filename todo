@@ -1,12 +1,14 @@
+==== BUGS =====================================================================
 - fix bug when gui is in gop.
-    - probably do to a stale glist.
-
-Wish List (maybe come back and do these things)
-    - potentially validate all input... maybe
-    - Default colors and pdnext colors
-    - have a slim version for pd vanilla
-    - think about having two update functions
-        - one for motion and one for drawing
-    - probably create a tooltip_update function
-    - refactor the code so that other guis can be created
-        - essentially rewriting the iemguis from scratch (ish) to not be a big pile of spaghetti
+    - probably due to a stale glist.
+- when dial is small, the label doesn't have enough padding
+==== WISH LIST ================================================================
+- have guis virtually connect to preset somehow... mimicking max
+- potentially validate all input... maybe
+- Default colors and pdnext colors
+- have a slim version for pd vanilla
+- think about having two update functions
+    - one for motion and one for drawing
+- probably create a tooltip_update function
+- refactor the code so that other guis can be created
+    - essentially rewriting the iemguis from scratch (ish) to not be a big pile of spaghetti
