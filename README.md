@@ -1,5 +1,6 @@
 # pd-guis
-Extra guis for puredata. Currently only compatible for pdnext.
+Extra guis and a preset manager for puredata. Guis are currently only compatible for pdnext.
+Preset Manager works for all versions of pd.
 
 --------------------------------------------------------------------------
 
@@ -65,6 +66,7 @@ and reload pdnext for the changes to take effect.
 - dial_iolet_border
 
 --------------------------------------------------------------------------
-## Current Object list (1 object):
+## Current Object list (2 objects):
 
 - [dial]
+- [plist]

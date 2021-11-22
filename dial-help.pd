@@ -45,8 +45,6 @@ dial. options are H_DRAG \, V_DRAG \, HV_DRAG \, and R_DRAG., f 35
 -40 8 1 1 0 0 2 0 100 1 3 0.01 2.5 3 4;
 #X obj 303 120 dial __EMPTY__ __EMPTY__ __EMPTY__ no_tooltip 90 180
 0 8 3 0 1 0 2 0 100 0 4 0.01 2.5 3 2;
-#X text 5 347 See the properties panel for more options to style the
-dial.;
 #X text 190 852 toggle infinite mode on or off. 0 for off \, non 0
 for on. Note that this will change the dials value., f 35;
 #X text 190 731 set the start position for the dial thumb. options
@@ -175,8 +173,10 @@ dial to the start position., f 38;
 #X connect 31 0 44 0;
 #X connect 33 0 6 0;
 #X restore 283 258 pd messages_examples;
-#X text 8 34 [dial] is a rotary dial/knob style gui. To use it you
-must be using pdnext version of pd. (this is how the color scheming
-works).;
 #X text 6 304 Pressing shift allows for fine tuning of the dials value.
 Pressing command will allow for faster movement of the dial.;
+#X text 8 34 [dial] is a rotary dial/knob style gui. To use it you
+must be using the pdnext version of pd. The color scheming is setup
+as a part of the pdnext tcl file.;
+#X text 5 347 Right click on a dial to open the properties panel for
+more options to style the dial.;

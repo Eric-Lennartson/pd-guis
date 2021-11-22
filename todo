@@ -1,9 +1,13 @@
+==== TODO =====================================================================
+- finish making documentation for plist.
+- make a header file to clean this up a bit.
 ==== BUGS =====================================================================
 - fix bug when gui is in gop.
     - probably due to a stale glist.
 - when dial is small, the label doesn't have enough padding
 ==== WISH LIST ================================================================
 - have guis virtually connect to preset somehow... mimicking max
+- maybe the preset manager gets a gui that allows you to add presets by hand?
 - potentially validate all input... maybe
 - Default colors and pdnext colors
 - have a slim version for pd vanilla

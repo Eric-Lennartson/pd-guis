@@ -1,0 +1,16 @@
+#N canvas 97 196 406 326 12;
+#X obj 15 18 inlet value;
+#X floatatom 25 42 5 0 0 0 - - -;
+#X obj 15 223 s \$1-rcv;
+#X text 139 174 update <preset> <param> <value>;
+#X text 149 21 \$1: Name of [preset_list];
+#X text 149 61 \$3: Name of param;
+#X text 149 41 \$2: Name of preset;
+#X msg 15 173 update \$1 \$2 \$3;
+#X obj 15 124 list prepend \$2;
+#X obj 15 100 list prepend \$3;
+#X connect 0 0 1 0;
+#X connect 0 0 9 0;
+#X connect 7 0 2 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;

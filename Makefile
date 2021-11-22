@@ -11,7 +11,7 @@ lib.name = guis
 # Sources: ##############################################################
 
 dial.class.sources := dial.c
-preset.class.sources := preset.c
+plist.class.sources := preset.c
 
 #########################################################################
 

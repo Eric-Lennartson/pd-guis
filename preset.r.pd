@@ -1,0 +1,14 @@
+#N canvas 622 153 467 214 12;
+#X obj 15 18 inlet param;
+#X obj 15 176 outlet value;
+#X obj 123 18 r \$1;
+#X obj 15 122 route \$2;
+#X text 179 41 \$2: Name of param;
+#X obj 15 72 list trim;
+#X floatatom 25 146 5 0 0 0 - - -;
+#X text 179 21 \$1: Name of [preset_list];
+#X connect 0 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 3 0 6 0;
+#X connect 5 0 3 0;
