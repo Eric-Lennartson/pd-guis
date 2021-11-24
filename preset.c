@@ -454,7 +454,8 @@ static void plist_save(t_gobj *z, t_binbuf *b)
     binbuf_addsemi(b);
 
     //saving the presets
-    plist_write(this, gensym("presets.txt"));
+    if(this->filename != NULL)
+        plist_write(this, this->filename);
 }
 
 static void plist_free(t_preset_list *this) {

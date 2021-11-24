@@ -1,5 +1,10 @@
 ==== TODO =====================================================================
 - finish making documentation for plist.
+    - add example files for read and write demo.
+    - figure out order of operations when reading and writing.
+- finish documentation for plist.r and plist.s
+- add options to set the args for the plist.r and plist.s
+- does reading in a preset also output the values of the preset?
 - make a header file to clean this up a bit.
 ==== BUGS =====================================================================
 - fix bug when gui is in gop.
