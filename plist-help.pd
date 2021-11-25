@@ -1,9 +1,9 @@
-#N canvas 114 23 651 718 12;
+#N canvas -194 -1013 651 718 12;
 #X declare -lib guis;
 #X text 5 871 Optional messages to send to the first inlet.;
 #X obj 512 10 declare -lib guis;
 #X obj 21 271 plist plist presets.txt;
-#N canvas 460 94 657 224 examples 0;
+#N canvas -28 -380 657 224 examples 1;
 #N canvas 48 96 677 320 add_messages 0;
 #X obj 19 125 plist add_example add_example.txt;
 #X msg 19 32 add_preset preset1;
@@ -14,7 +14,7 @@
 #X msg 41 94 symbol preset1;
 #X obj 19 159 preset.r add_example param1;
 #X obj 22 233 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 12500 1;
+-174938 -203556 0 1;
 #X text 222 158 remove the list selector and send out the value;
 #X floatatom 29 183 5 0 0 0 - - -;
 #X obj 19 270 preset.s add_example preset1 param1;
@@ -33,7 +33,7 @@ the preset \, this value will change.;
 #X connect 6 0 9 0;
 #X connect 7 0 10 0;
 #X restore 36 52 pd add_messages;
-#N canvas 201 363 450 300 read_and_write 0;
+#N canvas 333 -862 450 300 read_and_write 1;
 #X text 22 62 figure out reading and writing order of operations stuff.
 ;
 #X restore 36 142 pd read_and_write;
@@ -42,14 +42,14 @@ the preset \, this value will change.;
 #N canvas 253 161 694 390 update_message 0;
 #X msg 19 23 symbol preset1;
 #X obj 22 323 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 5975 1;
+-174938 -203556 0 1;
 #X floatatom 29 293 5 0 0 0 - - -;
 #X obj 19 165 plist update_example update_example.txt;
 #X text 301 165 produces an error because "update_example.txt" doesn't
 exist.;
 #X obj 19 259 preset.r update_example param1;
 #X obj 252 323 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 3200 1;
+-174938 -203556 0 1;
 #X floatatom 259 293 5 0 0 0 - - -;
 #X obj 249 259 preset.r update_example param2;
 #N canvas 541 267 224 342 lb 0;
@@ -237,9 +237,9 @@ to "presets.txt", f 69;
 #X obj 151 101 cnv 24 188 123 empty empty empty 20 12 0 14 -62285 -203556
 0;
 #X obj 154 134 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 191 134 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 1700 1;
+-174938 -203556 0 1;
 #X obj 154 107 hradio 18 1 0 2 which-preset-s empty preset1 40 9 0
 12 -91412 -174938 -203556 0;
 #X obj 515 15 loadbang;
@@ -275,9 +275,9 @@ to "presets.txt", f 69;
 #X msg 353 352 symbol preset2;
 #X obj 330 403 s plist-rcv;
 #X obj 154 164 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 154 194 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 5 136 preset.r plist tgl2;
 #X obj 5 166 preset.r plist tgl3;
 #N canvas 534 229 450 355 plist-snds 0;
@@ -362,9 +362,9 @@ to "presets.txt", f 69;
 #X connect 4 0 3 0;
 #X restore 188 378 pd plist-snds;
 #X obj 191 164 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 3200 1;
+-174938 -203556 0 1;
 #X obj 191 194 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 2000 1;
+-174938 -203556 0 1;
 #X obj 347 138 preset.r plist hsl2;
 #X obj 347 168 preset.r plist hsl3;
 #X obj 295 280 t f f;
@@ -459,7 +459,7 @@ to "presets.txt", f 69;
 #X restore 40 242 pd lb;
 #X obj 21 370 print;
 #X obj 60 314 tgl 24 1 empty empty Print_Output 30 12 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 21 345 spigot;
 #X obj 60 484 tgl 24 1 empty empty Print_Output 30 12 0 12 -91412 -174938
 -203556 0 1;
@@ -481,8 +481,6 @@ objects, f 90;
 #X text 97 629 receive presets;
 #X text 306 629 send out and update presets;
 #X floatatom 42 214 5 0 0 0 - - -;
-#X text 153 190 Use symbols to choose the preset by name \, or a number
-(integer) to choose the preset by number., f 41;
 #X text 190 270 [plist <plist_name> <file_to_load>];
 #X text 190 290 If neither plist name or file is provided [plist] defaults
 to "plist" and "presets.txt"., f 35;
@@ -493,7 +491,9 @@ uses the form <parameter_name> <parameter_value>.;
 #X text 14 1430 1) symbol - plist name. Defaults to "plist";
 #X text 295 1213 Clear the preset specified by <symbol>. All parameters
 will be removed \, but the empty preset will remain., f 47;
-#X obj 451 444 readsf~;
+#X text 153 190 Use symbols to choose the preset by name \, or a number
+(integer) to choose the preset by number. Presets start from 0, f
+41;
 #X connect 2 0 35 0;
 #X connect 29 0 2 0;
 #X connect 30 0 2 0;
