@@ -26,6 +26,7 @@ typedef struct _preset_list {
     t_object obj;
     t_preset *plist_head;
     t_symbol *name, *filename, *rcv;
+    t_symbol *last_read_filename; // for saving the last file we read before we read in the new one.
     t_canvas *cnv; // necessary to read and write files
     t_outlet *out;
 } t_preset_list;
@@ -387,10 +388,24 @@ static void plist_write(t_preset_list *this, t_symbol *file)
         pd_error(this, "%s: write failed", filename);
 }
 
+static void plist_save(t_preset_list *this)
+{
+    if(this->last_read_filename != NULL) // have we read in a file before?
+        plist_write(this, this->last_read_filename);
+    else if(this->filename != NULL) // if not, we save to the default or creation arg filename instead.
+        plist_write(this, this->filename);
+    else
+        pd_error(this, "Can't save plist. Filenames don't exist");
+}
+
 static void plist_read(t_preset_list *this, t_symbol *file)
 {
     t_binbuf *bb = binbuf_new();
-    // don't update the canvas, we won't be able to find the files.
+    // no calls to canvas_getcurrent, we won't be able to find the files.
+
+    if(file != NULL)
+        this->last_read_filename = file; //doesn't fail bc symbols never go away?
+
     plist_rm_all(this); // clear the plist before we add things
 
     if( binbuf_read_via_canvas(bb, file->s_name, this->cnv, 0) ) {
@@ -441,7 +456,18 @@ static void plist_read(t_preset_list *this, t_symbol *file)
     binbuf_free(bb);
 }
 
-static void plist_save(t_gobj *z, t_binbuf *b)
+/*
+ * We need this wrapper function so that when we call plist_read
+ * when the object is first created, we don't overwrite the loaded file.
+ * All other times read is called from a msg. Thus, this functions existence.
+*/
+static void plist_read_msg(t_preset_list *this, t_symbol *file) {
+    plist_save(this);
+    if(file != NULL)
+        plist_read(this, file);
+}
+
+static void plist_pd_save(t_gobj *z, t_binbuf *b)
 {
     t_preset_list *this = (t_preset_list *)z;
 
@@ -452,10 +478,7 @@ static void plist_save(t_gobj *z, t_binbuf *b)
                 this->name, this->filename);
     // we don't save filename bc we rebuild it in plist_new
     binbuf_addsemi(b);
-
-    //saving the presets
-    if(this->filename != NULL)
-        plist_write(this, this->filename);
+    plist_save(this);
 }
 
 static void plist_free(t_preset_list *this) {
@@ -471,9 +494,10 @@ static void *plist_new(t_symbol *name, t_symbol *filename)
     this->plist_head = NULL;
     this->name = (name != gensym("") && name != NULLSYM) ? name : gensym("plist");
     this->filename = (filename != gensym("") && filename != NULLSYM) ? filename : gensym("presets.txt");
+    this->last_read_filename = NULL;
     this->out = outlet_new(&this->obj, &s_list);
 
-    // read in the presets if it exits
+    // read in the presets if they exit
     this->cnv = canvas_getcurrent(); // only time we get the canvas.
     plist_read(this, this->filename);
 
@@ -502,10 +526,10 @@ void plist_setup(void)
     class_addmethod(plist_class, (t_method)plist_clear_all, gensym("clear_all"),  0);
     class_addmethod(plist_class, (t_method)plist_rm_all,    gensym("rm_all"),     0);
     class_addmethod(plist_class, (t_method)plist_write,     gensym("write"),      A_DEFSYMBOL, 0);
-    class_addmethod(plist_class, (t_method)plist_read,      gensym("read"),       A_DEFSYMBOL, 0); // needs update
+    class_addmethod(plist_class, (t_method)plist_read_msg,  gensym("read"),       A_DEFSYMBOL, 0);
     class_addfloat(plist_class, plist_float);
     class_addsymbol(plist_class, plist_symbol);
 
     class_sethelpsymbol(plist_class, gensym("plist"));
-    class_setsavefn(plist_class, plist_save);
+    class_setsavefn(plist_class, plist_pd_save);
 }
