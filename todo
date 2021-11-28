@@ -1,7 +1,5 @@
 ==== TODO =====================================================================
-- finish making documentation for plist.
-    - add example files for read and write demo.
-    - add example files for all of the plist stuff (stick it in it's own folder)
+- do a once over of plist docs. check that file_io examp works.
 - finish documentation for plist.r and plist.s
 - add options to set the args for the plist.r and plist.s
 - make a header file to clean this up a bit.
@@ -12,6 +10,8 @@
     - take time to think about what use cases are useful, and what the exact
       order of operations should be.
 ==== BUGS =====================================================================
+- bug in reading and writing, sometimes, a space or multiplies of the value for
+  a param are introduced. Not sure how this happens.
 - fix bug when gui is in gop.
     - probably due to a stale glist.
 - when dial is small, the label doesn't have enough padding

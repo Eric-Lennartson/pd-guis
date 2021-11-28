@@ -2,10 +2,8 @@
 #X declare -lib guis;
 #X text 5 871 Optional messages to send to the first inlet.;
 #X obj 512 10 declare -lib guis;
-#X obj 21 271 plist plist presets.txt;
-#N canvas -28 -380 657 224 examples 1;
+#N canvas 581 -473 657 224 examples 1;
 #N canvas 48 96 677 320 add_messages 0;
-#X obj 19 125 plist add_example add_example.txt;
 #X msg 19 32 add_preset preset1;
 #X text 160 32 add a preset with the name "preset1" to the plist;
 #X msg 29 62 add_param preset1 param1;
@@ -21,21 +19,50 @@
 #X text 276 270 send back updated values for the param to the specified
 plist \, preset \, and param.;
 #X text 152 93 output the preset;
-#X text 261 125 produces an error because "add_example.txt" doesn't
-exist.;
 #X text 73 184 when we change the value of the slider \, if we output
 the preset \, this value will change.;
-#X connect 0 0 6 0;
-#X connect 1 0 0 0;
-#X connect 3 0 0 0;
-#X connect 5 0 0 0;
-#X connect 6 0 7 0;
+#X obj 19 125 plist add_example ./examples/add_example.txt;
+#X connect 0 0 13 0;
+#X connect 2 0 13 0;
+#X connect 4 0 13 0;
+#X connect 5 0 6 0;
+#X connect 5 0 8 0;
 #X connect 6 0 9 0;
-#X connect 7 0 10 0;
+#X connect 13 0 5 0;
 #X restore 36 52 pd add_messages;
-#N canvas 333 -862 450 300 read_and_write 1;
-#X text 22 62 figure out reading and writing order of operations stuff.
-;
+#N canvas 169 202 747 345 read_and_write 1;
+#X text 294 29 Use the [read( and [write( messages to save and load
+presets from a text file. When a [plist] is created \, if a filename
+is provided as the second creation argument it will attempt to load
+it in upon creation. Whenever the read message is sent \, it will first
+save the previous file before loading in the one specified in the read
+message. Additionally \, anytime the patch is saved \, [plist] will
+save the current presets to the last file that was read in. Once the
+file has been read \, presets from the file can be sent out using the
+name of the preset (symbol) or a number (integer).;
+#X msg 27 31 read ./examples/file1.txt;
+#X msg 37 61 read ./examples/file2.txt;
+#X msg 77 121 write ./examples/file2.txt;
+#X msg 57 91 write ./examples/file1.txt;
+#X obj 27 295 plist file_io ./examples/file1.txt;
+#X obj 323 228 preset.r file_io hsl1;
+#X obj 493 228 preset.r file_io hsl2;
+#X obj 326 262 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
+-174938 -203556 0 1;
+#X obj 496 262 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
+-174938 -203556 0 1;
+#X msg 84 212 symbol preset1;
+#X floatatom 107 268 5 0 0 0 - - -;
+#X msg 94 240 symbol preset2;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 6 0 8 0;
+#X connect 7 0 9 0;
+#X connect 10 0 5 0;
+#X connect 11 0 5 0;
+#X connect 12 0 5 0;
 #X restore 36 142 pd read_and_write;
 #X text 149 51 messages to add presets or parameters;
 #X text 169 142 saving and loading presets from .txt files.;
@@ -44,9 +71,6 @@ the preset \, this value will change.;
 #X obj 22 323 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
 -174938 -203556 0 1;
 #X floatatom 29 293 5 0 0 0 - - -;
-#X obj 19 165 plist update_example update_example.txt;
-#X text 301 165 produces an error because "update_example.txt" doesn't
-exist.;
 #X obj 19 259 preset.r update_example param1;
 #X obj 252 323 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
 -174938 -203556 0 1;
@@ -81,19 +105,20 @@ work \, but isn't necessary.;
 #X floatatom 239 88 5 0 0 0 - - -;
 #X text 130 22 output the preset \, to see the updated values in the
 sliders;
-#X connect 0 0 3 0;
-#X connect 5 0 1 0;
-#X connect 5 0 2 0;
-#X connect 8 0 6 0;
-#X connect 8 0 7 0;
-#X connect 9 0 3 0;
-#X connect 11 0 3 0;
-#X connect 12 0 3 0;
-#X connect 13 0 11 0;
-#X connect 14 0 12 0;
+#X obj 19 165 plist update_example ./examples/update_example.txt;
+#X connect 0 0 14 0;
+#X connect 3 0 1 0;
+#X connect 3 0 2 0;
+#X connect 6 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 14 0;
+#X connect 9 0 14 0;
+#X connect 10 0 14 0;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
 #X restore 36 82 pd update_message;
 #X text 169 81 message to update a parameters;
-#N canvas 521 50 737 603 remove_and_clear_messages 0;
+#N canvas 45 -743 737 603 remove_and_clear_messages 0;
 #X msg 19 23 symbol preset1;
 #N canvas 466 75 382 635 lb 0;
 #X obj 23 42 loadbang;
@@ -142,9 +167,6 @@ sliders;
 #X connect 15 0 3 0;
 #X connect 16 0 3 0;
 #X restore 61 151 pd lb;
-#X text 331 425 produces an error because "rm_clear_example.txt" doesn't
-exist.;
-#X obj 19 425 plist rm_clear_example rm_clear_example.txt;
 #X msg 81 222 rm_all;
 #X text 136 221 completely clears the plist. All presets and parameters
 will be removed.;
@@ -171,21 +193,23 @@ param2 \, and param3.);
 #X text 38 469 Look in the pd console to see how removing or clearing
 changes the output of the plist. Empty presets don't print anything.
 Trying to output presets that don't exist produces an error.;
-#X connect 0 0 3 0;
-#X connect 1 0 3 0;
-#X connect 3 0 13 0;
-#X connect 4 0 3 0;
-#X connect 6 0 1 0;
-#X connect 7 0 3 0;
-#X connect 9 0 3 0;
-#X connect 15 0 3 0;
-#X connect 16 0 3 0;
-#X connect 18 0 3 0;
-#X connect 19 0 3 0;
+#X obj 19 425 plist rm_clear_example ./examples/rm_clear_example.txt
+;
+#X connect 0 0 19 0;
+#X connect 1 0 19 0;
+#X connect 2 0 19 0;
+#X connect 4 0 1 0;
+#X connect 5 0 19 0;
+#X connect 7 0 19 0;
+#X connect 13 0 19 0;
+#X connect 14 0 19 0;
+#X connect 16 0 19 0;
+#X connect 17 0 19 0;
+#X connect 19 0 11 0;
 #X restore 36 112 pd remove_and_clear_messages;
 #X text 251 111 remove presets and params \, clear presets or the plist.
 ;
-#X restore 536 283 pd examples;
+#X restore 536 493 pd examples;
 #X text 29 693 1) float \, symbol -;
 #X text 170 693 output the specified preset. Floats select the preset
 by order saved in the plist. Symbols select the preset by name., f
@@ -229,8 +253,6 @@ from a .txt file., f 83;
 , f 90;
 #X text 1 1384 ==========================================================================================arguments
 , f 90;
-#X text 14 1454 2) symbol - .txt file to load and save to. Defaults
-to "presets.txt", f 69;
 #X msg 21 166 symbol preset1;
 #X msg 31 189 symbol preset2;
 #N canvas 323 -788 687 447 ui_example 0;
@@ -403,7 +425,7 @@ to "presets.txt", f 69;
 #X connect 35 1 25 1;
 #X coords 0 -1 1 1 190 125 2 150 100;
 #X restore 210 448 pd ui_example;
-#N canvas 488 28 567 556 lb 0;
+#N canvas 361 197 567 556 lb 0;
 #X obj 16 17 loadbang;
 #X msg 109 88 add_preset preset1;
 #X msg 179 252 add_param preset1 tgl1;
@@ -466,14 +488,6 @@ to "presets.txt", f 69;
 #X obj 21 515 spigot;
 #X obj 21 458 r plist-rcv;
 #X obj 21 547 print msg_to_plist;
-#X text 8 34 [plist] can save and recall presets defined by the user.
-Presets can either be loaded from a text file or defined in the patch
-and written to a text file whenever the patch is saved. [plist] is
-used in conjunction [preset.r] and [preset.s] to send and receive the
-parameters from a preset in the plist. A simple example is provided
-below. Open the subpatch to see how one could go about setting up an
-interface that makes use of the presets. More in depth examples can
-be found in the [pd examples] subpatch., f 89;
 #X text 4 579 ==========================================================================================related
 objects, f 90;
 #X obj 33 630 preset.r;
@@ -481,8 +495,8 @@ objects, f 90;
 #X text 97 629 receive presets;
 #X text 306 629 send out and update presets;
 #X floatatom 42 214 5 0 0 0 - - -;
-#X text 190 270 [plist <plist_name> <file_to_load>];
-#X text 190 290 If neither plist name or file is provided [plist] defaults
+#X text 360 270 [plist <plist_name> <file_to_load>];
+#X text 360 290 If neither plist name or file is provided [plist] defaults
 to "plist" and "presets.txt"., f 35;
 #X text 21 409 All messages to preset are sent on this global receive.
 The name is always \, "<plist_name>-rcv"., f 55;
@@ -494,13 +508,26 @@ will be removed \, but the empty preset will remain., f 47;
 #X text 153 190 Use symbols to choose the preset by name \, or a number
 (integer) to choose the preset by number. Presets start from 0, f
 41;
-#X connect 2 0 35 0;
-#X connect 29 0 2 0;
-#X connect 30 0 2 0;
-#X connect 32 0 2 0;
+#X obj 21 271 plist plist ./examples/presets.txt;
+#X text 14 1454 2) symbol - .txt file to load and save to. (optional)
+;
+#X text 8 34 [plist] can save and recall presets defined by the user.
+Presets can either be loaded from a text file or defined in the patch
+and written to a text file whenever the patch is saved. If a file name
+is not provided as the second creation argument \, it will not save
+whenever the patch is saved. [plist] is used in conjunction [preset.r]
+and [preset.s] to send and receive the parameters from a preset in
+the plist. A simple example is provided below. Open the subpatch to
+see how one could go about setting up an interface that makes use of
+the presets. More in depth examples can be found in the [pd examples]
+subpatch., f 89;
+#X connect 27 0 51 0;
+#X connect 28 0 51 0;
+#X connect 30 0 51 0;
+#X connect 32 0 33 1;
+#X connect 33 0 31 0;
 #X connect 34 0 35 1;
-#X connect 35 0 33 0;
-#X connect 36 0 37 1;
-#X connect 37 0 39 0;
-#X connect 38 0 37 0;
-#X connect 46 0 2 0;
+#X connect 35 0 37 0;
+#X connect 36 0 35 0;
+#X connect 43 0 51 0;
+#X connect 51 0 33 0;
