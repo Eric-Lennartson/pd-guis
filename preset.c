@@ -36,7 +36,7 @@ typedef struct _preset_list {
     static void plist_print(t_preset_list *this);
 #endif
 
-static char *rm_newline(char *str) { return (str[0] == '\n') ? ++str : str; }
+static inline char *rm_newline(char *str) { return (str[0] == '\n') ? ++str : str; }
 
 static t_param *param_new(t_symbol *name, t_float value)
 {
@@ -233,13 +233,13 @@ static void plist_add(t_preset_list *this, t_symbol *name)
     }
 }
 
-static void preset_add(t_preset_list *this, t_symbol *preset_name, t_symbol *param_name)
+static void preset_add(t_preset_list *this, t_symbol *preset_name, t_symbol *param_name, t_floatarg value)
 {
     t_preset *preset = find_preset(this, preset_name);
     if(preset) { // does the preset exist?
         t_param *found = find_param(preset, param_name);
         if(!found) // does the param NOT exist?
-            add_param(preset, param_new(param_name, 0) ); // later, can users set the value?
+            add_param(preset, param_new(param_name, value) );
         #ifdef DEBUG
             preset_print(this);
         #endif
@@ -248,7 +248,7 @@ static void preset_add(t_preset_list *this, t_symbol *preset_name, t_symbol *par
         preset = find_preset(this, preset_name); // if we change the plist_add code to return a pointer to the just added preset, we don't have to find it again
         t_param *found = find_param(preset, param_name);
         if(!found) // does the param NOT exist?
-            add_param(preset, param_new(param_name, 0) ); // later, can users set the value?
+            add_param(preset, param_new(param_name, value) );
         #ifdef DEBUG
             preset_print(this);
         #endif
@@ -300,7 +300,7 @@ static void plist_float(t_preset_list *this, t_floatarg which)
     if(p)
         plist_out(this, p);
     else
-        pd_error(this, "plist \"%s\" has less than %d preset(s)", this->name->s_name, (int)which+1);
+        pd_error(this, "plist \"%s\" only has %d preset(s)", this->name->s_name, (int)which);
 }
 
 // remove a single param from a preset
@@ -350,42 +350,64 @@ static void plist_rm_all(t_preset_list *this)
 
 static void plist_write(t_preset_list *this, t_symbol *file)
 {
-    char filename[MAXPDSTRING];
+    if(file != NULL && file != gensym("") && file != NULLSYM)
+    {
+        char filename[MAXPDSTRING];
 
-    t_preset *preset = this->plist_head;
-    t_binbuf *bb = binbuf_new();
+            t_preset *preset = this->plist_head;
+            t_binbuf *bb = binbuf_new();
+            binbuf_clear(bb);
 
-    if(preset == NULL) {
-        binbuf_addv(bb, "s", gensym("EMPTY_PRESET"));
-        binbuf_addsemi(bb);
+            if(preset == NULL) {
+                binbuf_addv(bb, "s", gensym("EMPTY_PRESET"));
+                binbuf_addsemi(bb);
+            }
+            else
+            {
+                binbuf_addv(bb, "s", gensym("PLIST_START"));
+                binbuf_addsemi(bb);
+                while(preset != NULL)
+                {
+                    t_param *param = preset->preset_head;
+                    binbuf_addv(bb, "s", gensym("PRESET_START"));
+                    binbuf_addsemi(bb);
+                    binbuf_addv(bb, "s", gensym("PRESET_NAME"));
+                    binbuf_addsemi(bb);
+                    binbuf_addv(bb, "s", preset->name);
+                    binbuf_addsemi(bb);
+                    while(param != NULL)
+                    {
+                        binbuf_addv(bb, "s", gensym("PARAM_NAME"));
+                        binbuf_addsemi(bb);
+                        binbuf_addv(bb, "s", param->name);
+                        binbuf_addsemi(bb);
+                        binbuf_addv(bb, "s", gensym("PARAM_VALUE"));
+                        binbuf_addsemi(bb);
+                        binbuf_addv(bb, "f", param->value);
+                        binbuf_addsemi(bb);
+                        param = param->next;
+                    }
+                    binbuf_addv(bb, "s", gensym("PRESET_END"));
+                    binbuf_addsemi(bb);
+                    preset = preset->next;
+                }
+                binbuf_addv(bb, "s", gensym("PLIST_END"));
+                binbuf_addsemi(bb);
+            }
+
+            //this line is essential. why? I don't know, but it doesn't work without it
+            canvas_makefilename(this->cnv, file->s_name, filename, MAXPDSTRING);
+            if( binbuf_write(bb, filename, "", 0) )
+                pd_error(this, "%s: write failed", filename);
+
+            char *presets;
+            int txt_length;
+            binbuf_gettext(bb, &presets, &txt_length);
+            binbuf_clear(bb);
+            binbuf_free(bb);
     }
     else
-    {
-        while(preset != NULL)
-        {
-            t_param *param = preset->preset_head;
-            binbuf_addv(bb, "s", gensym("PRESET_START"));
-            binbuf_addsemi(bb);
-            binbuf_addv(bb, "s", preset->name);
-            binbuf_addsemi(bb);
-            while(param != NULL)
-            {
-                binbuf_addv(bb, "s", param->name);
-                binbuf_addsemi(bb);
-                binbuf_addv(bb, "f", param->value);
-                binbuf_addsemi(bb);
-                param = param->next;
-            }
-            binbuf_addv(bb, "s", gensym("PRESET_END"));
-            binbuf_addsemi(bb);
-            preset = preset->next;
-        }
-    }
-
-    //this line is essential. why? I don't know, but it doesn't work without it
-    canvas_makefilename(this->cnv, file->s_name, filename, MAXPDSTRING);
-    if( binbuf_write(bb, filename, "", 0) )
-        pd_error(this, "%s: write failed", filename);
+        pd_error(this, "[write( Bad file name.");
 }
 
 static void plist_save(t_preset_list *this)
@@ -395,65 +417,81 @@ static void plist_save(t_preset_list *this)
     else if(this->filename != NULL) // if not, we save to the default or creation arg filename instead.
         plist_write(this, this->filename);
     else
-        pd_error(this, "Can't save plist. Filenames don't exist");
+        pd_error(this, "Can't save plist. Filename don't exist");
 }
 
 static void plist_read(t_preset_list *this, t_symbol *file)
 {
-    t_binbuf *bb = binbuf_new();
-    // no calls to canvas_getcurrent, we won't be able to find the files.
-
-    if(file != NULL)
+    post("[plist] reading in file: \"%s\"", file->s_name);
+    if(file != NULL && file != gensym("") && file != NULLSYM)
+    {
+        t_binbuf *bb = binbuf_new();
+        binbuf_clear(bb);
+        // no calls to canvas_getcurrent, we won't be able to find the files.
         this->last_read_filename = file; //doesn't fail bc symbols never go away?
 
-    plist_rm_all(this); // clear the plist before we add things
+        plist_rm_all(this); // clear the plist before we add things
 
-    if( binbuf_read_via_canvas(bb, file->s_name, this->cnv, 0) ) {
-        pd_error(this, "%s: read failed", file->s_name);
-    }
-    else
-    {   // if the file exists lets read it in
-        char *presets;
-        int txt_length;
-        binbuf_gettext(bb, &presets, &txt_length);
+        if( binbuf_read_via_canvas(bb, file->s_name, this->cnv, 0) ) {
+            pd_error(this, "%s: read failed", file->s_name);
+        }
+        else
+        {   // if the file exists lets read it in
+            char *presets;
+            int txt_length;
+            binbuf_gettext(bb, &presets, &txt_length);
 
-        char *token;
-        token = strtok(presets, ";");
-        char *preset_name, *param_name;
-        t_float value;
+            char *token;
+            token = strtok(presets, ";");
 
-        // if it isn't empty
-        if(strcmp(token, "EMPTY_PRESET") != 0)
-        {
-            while(token != NULL)
+            // if it isn't empty
+            if(strcmp(token, "EMPTY_PRESET") != 0)
             {
-                if(strcmp(token, "\n") != 0)
-                {  // if we're just a newline char skip
-                    token = rm_newline(token);
-                    if(strcmp(token, "PRESET_START") == 0)
-                    { // we're at the start of a preset
-                        token = advance(); // advance to preset name
-                        token = rm_newline(token);
-                        preset_name = token;
-                        plist_add(this, gensym(preset_name));
-                    }
-                    else if(strcmp(token, "PRESET_END") != 0)
-                    { // we're a param value pair
-                        param_name = token;
+                char *preset_name = NULL, *param_name = NULL;
+                t_float value = 0.f;
+                while(token != NULL)
+                {
+                    if(strcmp(token, "\n") == 0) {
                         token = advance();
-                        token = rm_newline(token);
-                        value = strtod(token, NULL);
-                        preset_add(this, gensym(preset_name), gensym(param_name) );
                     }
-                    // otherwise we're at the PRESET_END so we just advance
+                    else
+                    {
+                        token = rm_newline(token);
+                        if(strcmp(token, "PLIST_START") == 0 || strcmp(token, "PRESET_START") == 0) {
+                        }
+                        else if(strcmp(token, "PRESET_NAME") == 0) {
+                            token = advance();
+                            token = rm_newline(token);
+                            preset_name = token;
+                            plist_add(this, gensym(preset_name));
+                        }
+                        else if(strcmp(token, "PARAM_NAME") == 0) {
+                            token = advance();
+                            token = rm_newline(token);
+                            param_name = token; // we don't have the value yet.
+                        }
+                        else if(strcmp(token, "PARAM_VALUE") == 0) {
+                            token = advance();
+                            token = rm_newline(token);
+                            value = strtod(token, NULL);
+                            preset_add(this, gensym(preset_name), gensym(param_name), value);
+                        }
+                        else if(strcmp(token, "PLIST_END") == 0) {
+                            break;
+                        }
+                        token = advance();
+                    }
                 }
-                token = advance(); // advance the token
+                preset_name = param_name = NULL;
+                free(preset_name);
+                free(param_name);
             }
         }
+        binbuf_clear(bb);
+        binbuf_free(bb);
     }
-    // done reading the file, we don't need the binbuf anymore.
-    binbuf_clear(bb);
-    binbuf_free(bb);
+    else
+        pd_error(this, "[read( Bad file name.");
 }
 
 /*
@@ -493,13 +531,14 @@ static void *plist_new(t_symbol *name, t_symbol *filename)
 
     this->plist_head = NULL;
     this->name = (name != gensym("") && name != NULLSYM) ? name : gensym("plist");
-    this->filename = (filename != gensym("") && filename != NULLSYM) ? filename : gensym("presets.txt");
+    this->filename = filename;
     this->last_read_filename = NULL;
     this->out = outlet_new(&this->obj, &s_list);
 
     // read in the presets if they exit
     this->cnv = canvas_getcurrent(); // only time we get the canvas.
-    plist_read(this, this->filename);
+    if( this->filename != gensym("") && this->filename != NULLSYM )
+        plist_read(this, this->filename);
 
     // set up the receive name
     char str[MAXPDSTRING];
@@ -518,7 +557,7 @@ void plist_setup(void)
                            CLASS_DEFAULT, A_DEFSYMBOL, A_DEFSYMBOL, 0);
 
     class_addmethod(plist_class, (t_method)plist_add,       gensym("add_preset"), A_DEFSYMBOL, 0);
-    class_addmethod(plist_class, (t_method)preset_add,      gensym("add_param"),  A_DEFSYMBOL, A_DEFSYMBOL, 0);
+    class_addmethod(plist_class, (t_method)preset_add,      gensym("add_param"),  A_DEFSYMBOL, A_DEFSYMBOL, A_DEFFLOAT, 0);
     class_addmethod(plist_class, (t_method)plist_update,    gensym("update"),     A_DEFSYMBOL, A_DEFSYMBOL, A_DEFFLOAT, 0);
     class_addmethod(plist_class, (t_method)plist_remove,    gensym("rm_preset"),  A_DEFSYMBOL, 0);
     class_addmethod(plist_class, (t_method)preset_remove,   gensym("rm_param"),   A_DEFSYMBOL, A_DEFSYMBOL, 0);
