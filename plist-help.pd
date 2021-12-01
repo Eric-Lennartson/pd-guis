@@ -48,9 +48,9 @@ from a .txt file., f 83;
 #X obj 151 101 cnv 24 188 123 empty empty empty 20 12 0 14 -62285 -203556
 0;
 #X obj 154 134 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 191 134 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 2900 1;
+-174938 -203556 0 1;
 #X obj 154 107 hradio 18 1 0 2 which-preset-s empty preset1 40 9 0
 12 -91412 -174938 -203556 0;
 #X obj 515 15 loadbang;
@@ -86,9 +86,9 @@ from a .txt file., f 83;
 #X msg 353 352 symbol preset2;
 #X obj 330 403 s plist-rcv;
 #X obj 154 164 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 154 194 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 1 1;
+-203556 0 1;
 #X obj 5 136 preset.r plist tgl2;
 #X obj 5 166 preset.r plist tgl3;
 #N canvas 534 229 450 355 plist-snds 0;
@@ -173,9 +173,9 @@ from a .txt file., f 83;
 #X connect 4 0 3 0;
 #X restore 188 378 pd plist-snds;
 #X obj 191 164 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 5900 1;
+-174938 -203556 0 1;
 #X obj 191 194 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 2200 1;
+-174938 -203556 0 1;
 #X obj 347 138 preset.r plist hsl2;
 #X obj 347 168 preset.r plist hsl3;
 #X obj 295 280 t f f;
@@ -317,7 +317,7 @@ how [plist] keeps track of and remembers the settings., f 31;
 #X msg 37 103 symbol preset1;
 #X obj 19 199 preset.r add_example param1;
 #X obj 22 273 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 8520 1;
+-174938 -203556 0 1;
 #X text 222 198 remove the list selector and send out the value;
 #X floatatom 29 223 5 0 0 0 - - -;
 #X obj 19 310 preset.s add_example preset1 param1;

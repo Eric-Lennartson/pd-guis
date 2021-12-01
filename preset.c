@@ -406,6 +406,10 @@ static void plist_write(t_preset_list *this, t_symbol *file)
             binbuf_clear(bb);
             binbuf_free(bb);
     }
+    else if(this->filename != NULL) {
+        // supposedly we're good in this case.
+        // I don't trust myself.
+    }
     else
         pd_error(this, "[write( Bad file name.");
 }

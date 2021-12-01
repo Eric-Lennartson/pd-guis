@@ -1,11 +1,10 @@
 ==== TODO =====================================================================
-- do a once over of plist docs. check that file_io examp works.
-- finish documentation for plist.r and plist.s
-- add options to set the args for the plist.r and plist.s
-- make a header file to clean this up a bit.
+- add code to deal with the case where no file name to write to is provided.
 - update pd-guis on deken to version 0.2.0
 ==== REFACTOR =================================================================
+- make a header file for preset.c to clean it up a bit.
 - later, refactor the filename business in preset.c
+- omg, the reading and writing is so jank, but it DOES work, (i think)
 - filename shenangigans is getting complicated...
     - take time to think about what use cases are useful, and what the exact
       order of operations should be.
