@@ -1,72 +1,50 @@
-#N canvas 685 -916 651 806 12;
-#X declare -lib guis;
-#X text 5 601 Optional messages to send to the first inlet.;
-#X obj 295 10 declare -lib guis;
-#X obj 21 181 plist plist presets.txt;
-#N canvas 343 122 723 429 examples 0;
-#X restore 496 238 pd examples;
-#X text 8 34 [plist] can save and recall presets defined by the user.
-Presets can either be loaded from a text file or defined in the patch
-and written to a text file later. [plist] is used in conjunction [preset.r]
-and [preset.s] to send and receive the parameters from a preset in
-the plist. A simple example is provided below. More in depth examples
-can be found in the [pd examples] subpatch., f 89;
-#X text 29 423 1) float \, symbol -;
-#X text 170 423 output the specified preset. Floats select the preset
-by order saved in the plist. Symbols select the preset by name., f
-64;
-#X text 29 505 1) list -;
-#X text 146 505 returns the parameters from the selected preset one
-by one as a list. Each list is composed like this Symbol: <param_name>
-\, Float: <param_value>, f 67;
-#X text 6 765 3) update <symbol> \, <symbol> \, <float> -;
-#X text 295 645 add a preset with the name specified by the symbol
+#N canvas 721 -934 651 865 12;
+#X text 5 541 Optional messages to send to the first inlet.;
+#X text 6 705 3) update <symbol> \, <symbol> \, <float> -;
+#X text 295 585 add a preset with the name specified by the symbol
 argument to the plist., f 47;
-#X text 6 645 1) add_preset <symbol> ----------;
-#X text 295 705 add a parameter to a preset specified by the symbols.
+#X text 6 585 1) add_preset <symbol> ----------;
+#X text 295 645 add a parameter to a preset specified by the symbols.
 Order of arguments is <preset_name> \, <param_name>., f 47;
-#X text 295 765 update a parameter in a preset to the value. order
+#X text 295 705 update a parameter in a preset to the value. order
 of arguments is <preset_name> \, <param_name> \, <param_value>, f
 47;
-#X text 294 858 remove a parameter from a preset. Order of arguments
-is <preset_name> \, <param_name>, f 47;
-#X text 295 943 Clear the preset specified by <symobl>. All parameters
-will be removed \, but the empty preset will remain., f 47;
-#X text 296 1008 Clear all presets \, all parameters will be removed
-\, but the empty presets will remain., f 47;
-#X text 6 705 2) add_param <symbol> \, <symbol> -------;
-#X text 6 858 5) rm_param <symbol> \, <symbol> --------;
-#X text 6 903 6) rm_all ----------------------------- completely empty
-the plist., f 83;
-#X text 6 818 4) rm_preset <symbol> ----------------- remove a preset
-from the plist., f 84;
-#X text 6 943 7) clear <symbol> ---------------------;
-#X text 6 1008 8) clear_all --------------------------;
-#X text 6 1048 9) write <symbol> --------------------- write the contents
-of the plist to a .txt file., f 89;
-#X text 1 1204 ====================================================================================================================================================================================
+#X text 6 645 2) add_param <symbol> \, <symbol> -------;
+#X text 1 874 ====================================================================================================================================================================================
 , f 90;
-#X text 6 1088 10) read <symbol> --------------------- read in a plist
-from a .txt file., f 83;
-#X text 1 564 ==========================================================================================messages
+#X text 1 494 ==========================================================================================messages
 , f 90;
-#X text 4 471 ==========================================================================================outlets
+#X text 4 451 ==========================================================================================outlets
 , f 90;
 #X text 4 389 ==========================================================================================inlets
 , f 90;
-#X text 1 1114 ==========================================================================================arguments
+#X text 1 754 ==========================================================================================arguments
 , f 90;
-#X text 14 1160 1) symbol - plist name. Defailts to "plist";
-#X text 14 1184 2) symbol - .txt file to load and save to. Defaults
-to "presets.txt", f 69;
-#X text 196 143 READING AND WRITING OPERATIONS DEFINED BY USER!;
-#X obj 226 179 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 0 1;
-#X obj 253 179 tgl 24 0 empty empty empty 30 11 0 12 -91412 -174938
--203556 0 1;
-#X obj 286 181 vsl 22 140 0 139 0 0 empty empty empty 0 -9 0 12 -91412
+#X obj 19 199 preset.r add_example param1;
+#X obj 22 273 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
 -174938 -203556 0 1;
-#X obj 311 181 vsl 22 140 0 139 0 0 empty empty empty 0 -9 0 12 -91412
--174938 -203556 0 1;
-#X obj 342 179 hradio 18 1 0 4 empty empty empty -1 -10 0 12 -91412
--174938 -203556 0;
+#X floatatom 29 223 5 0 0 0 - - -;
+#X obj 19 310 preset.s add_example preset1 param1;
+#N canvas 0 23 184 215 lb 0;
+#X obj 45 42 loadbang;
+#X msg 45 106 rm_all;
+#X obj 60 69 bng 24 250 50 0 empty empty empty 30 11 0 12 -91412 -174938
+-203556;
+#X obj 45 130 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X restore 44 130 pd lb;
+#X text 91 129 loadbang to setup the example;
+#X text 29 423 1) float -;
+#X text 170 423 value to send back to the plist and update the parameter.
+, f 64;
+#X text 14 800 1) symbol - name of plist;
+#X text 14 824 2) symbol - name of preset;
+#X text 14 848 3) symbol - name of param;
+#X obj 19 165 plist plist ;
+#X connect 12 0 13 0;
+#X connect 12 0 14 0;
+#X connect 13 0 15 0;
+#X connect 16 0 23 0;
+#X connect 23 0 12 0;

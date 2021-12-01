@@ -1,4 +1,4 @@
-#N canvas 97 196 406 326 12;
+#N canvas 97 196 406 270 12;
 #X obj 15 18 inlet value;
 #X floatatom 25 42 5 0 0 0 - - -;
 #X obj 15 223 s \$1-rcv;
