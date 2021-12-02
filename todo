@@ -1,5 +1,4 @@
 ==== TODO =====================================================================
-- add code to deal with the case where no file name to write to is provided.
 - update pd-guis on deken to version 0.2.0
 ==== REFACTOR =================================================================
 - make a header file for preset.c to clean it up a bit.

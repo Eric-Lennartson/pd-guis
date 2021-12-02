@@ -1,8 +1,8 @@
-#N canvas 830 -1009 630 912 12;
+#N canvas 800 -1057 633 966 12;
 #X declare -lib guis;
-#X text 5 627 Optional messages to send to the first inlet.;
-#X obj 82 340 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
--174938 -203556 5000 1;
+#X text 5 677 Optional messages to send to the first inlet.;
+#X obj 82 350 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
+-174938 -203556 3000 1;
 #X floatatom 19 333 5 0 0 0 - - -;
 #N canvas 422 23 295 351 lb 0;
 #X obj 45 42 loadbang;
@@ -11,10 +11,10 @@
 -203556;
 #X obj 45 300 outlet;
 #X obj 45 96 t b b;
-#X msg 85 160 add_param preset1 param1;
-#X msg 85 190 add_param preset1 param2;
-#X msg 85 220 add_param preset2 param1;
-#X msg 85 250 add_param preset2 param2;
+#X msg 85 160 add_param preset1 param1 0.3;
+#X msg 85 190 add_param preset1 param2 100;
+#X msg 85 220 add_param preset2 param1 30;
+#X msg 85 250 add_param preset2 param2 82;
 #X connect 0 0 4 0;
 #X connect 1 0 3 0;
 #X connect 2 0 4 0;
@@ -29,40 +29,40 @@
 #X connect 8 0 3 0;
 #X restore 40 200 pd lb;
 #X text 87 201 loadbang to setup the example, f 21;
-#X text 14 806 1) symbol - name of plist;
-#X text 14 830 2) symbol - name of preset;
-#X text 14 854 3) symbol - name of param;
+#X text 14 856 1) symbol - name of plist;
+#X text 14 880 2) symbol - name of preset;
+#X text 14 904 3) symbol - name of param;
 #X obj 19 265 plist plist ;
-#X text 6 669 1) set_param <symbol>;
-#X text 6 696 2) set_preset <symbol>;
-#X text 6 723 3) set_plist <symbol>;
-#X text 175 669 set the parameter to update with the specified symbol
+#X text 6 719 1) set_param <symbol>;
+#X text 6 746 2) set_preset <symbol>;
+#X text 6 773 3) set_plist <symbol>;
+#X text 175 719 set the parameter to update with the specified symbol
 ;
-#X text 174 696 set the preset to update with the specified symbol
+#X text 174 746 set the preset to update with the specified symbol
 ;
-#X text 175 723 set the plist to send the update message with the specified
+#X text 175 773 set the plist to send the update message with the specified
 symbol;
-#X text 1 588 ======================================================================================messages
+#X text 1 638 ======================================================================================messages
 , f 86;
-#X text 1 551 ======================================================================================outlets
+#X text 1 601 ======================================================================================outlets
 , f 86;
-#X text 3 493 ======================================================================================inlets
+#X text 3 543 ======================================================================================inlets
 , f 86;
-#X text 1 760 ======================================================================================arguments
+#X text 1 810 ======================================================================================arguments
 , f 86;
-#X text 1 880 ==============================================================================================================================================================================
+#X text 1 930 ==============================================================================================================================================================================
 , f 87;
 #X msg 19 141 symbol preset1;
 #X obj 19 299 preset.r plist param1;
-#X obj 79 461 preset.s plist preset1 param1;
+#X obj 79 491 preset.s plist preset1 param1;
 #X obj 244 265 plist plist2 ;
 #X msg 29 168 symbol preset2;
-#X msg 97 376 set_plist plist2;
-#X msg 117 428 set_param param2;
-#X msg 107 402 set_preset preset2;
+#X msg 97 396 set_plist plist2;
+#X msg 117 448 set_param param2;
+#X msg 107 422 set_preset preset2;
 #X obj 244 299 preset.r plist2 param1;
 #X floatatom 254 323 5 0 0 0 - - -;
-#X text 29 530 1) float - value to send back to the plist and update
+#X text 29 580 1) float - value to send back to the plist and update
 the parameter., f 69;
 #X msg 243 141 symbol preset1;
 #X msg 253 168 symbol preset2;
@@ -74,6 +74,9 @@ output anything. [preset.s] is used to update the various parameters
 in presets. It is essentially a wrapper for the update message. The
 various set messages can be used to have it update different plists
 \, presets and their parameters., f 84;
+#X text 234 352 move the slider to see the number boxes change.;
+#X text 296 491 notice how preset1 and 2 get overwritten in plist1
+\, but not in plist2., f 40;
 #X connect 1 0 22 0;
 #X connect 3 0 8 0;
 #X connect 3 0 23 0;

@@ -310,8 +310,8 @@ the presets. More in depth examples can be found in the [pd examples]
 subpatch., f 89;
 #X text 409 494 change the values of the toggles and slidres to see
 how [plist] keeps track of and remembers the settings., f 31;
-#N canvas 580 -785 657 224 message_examples 1;
-#N canvas 605 -516 677 406 add_messages 1;
+#N canvas 580 -785 657 224 message_examples 0;
+#N canvas 605 -516 677 406 add_messages 0;
 #X msg 19 32 add_preset preset1;
 #X text 160 32 add a preset with the name "preset1" to the plist;
 #X msg 37 103 symbol preset1;

@@ -1,4 +1,4 @@
-#N canvas 617 -939 623 761 12;
+#N canvas 617 -939 617 722 12;
 #X declare -lib guis;
 #X obj 22 360 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
 -174938 -203556 5000 1;
@@ -28,20 +28,19 @@
 #X connect 8 0 3 0;
 #X restore 40 200 pd lb;
 #X text 87 201 loadbang to setup the example, f 30;
-#X text 14 669 1) symbol - name of plist;
-#X text 1 588 ======================================================================================messages
+#X text 14 629 1) symbol - name of plist;
+#X text 1 548 ======================================================================================messages
 , f 86;
-#X text 1 521 ======================================================================================outlets
+#X text 1 481 ======================================================================================outlets
 , f 86;
-#X text 3 453 ======================================================================================inlets
+#X text 3 413 ======================================================================================inlets
 , f 86;
-#X text 1 623 ======================================================================================arguments
+#X text 1 583 ======================================================================================arguments
 , f 86;
-#X text 1 723 ==============================================================================================================================================================================
+#X text 1 683 ==============================================================================================================================================================================
 , f 87;
 #X msg 19 141 symbol preset1;
 #X obj 19 299 preset.r plist param1;
-#X obj 19 401 preset.s plist preset1 param1;
 #X msg 29 168 symbol preset2;
 #X obj 471 6 declare -lib guis;
 #X text 3 29 [preset.r] and [preset.s] are used to interface with [plist].
@@ -51,14 +50,20 @@ output anything. [preset.s] is used to update the various parameters
 in presets. It is essentially a wrapper for the update message. The
 various set messages can be used to have it update different plists
 \, presets and their parameters., f 84;
-#X text 14 693 2) symbol - name of param;
-#X text 29 497 1) list - output from a [plist];
-#X text 29 559 1) float - value of the specified parameter;
+#X text 14 653 2) symbol - name of param;
+#X text 29 457 1) list - output from a [plist];
+#X text 29 519 1) float - value of the specified parameter;
+#X obj 185 360 hsl 140 22 0 139 0 0 empty empty empty -4 -10 0 12 -91412
+-174938 -203556 13000 1;
+#X floatatom 191 333 5 0 0 0 - - -;
+#X obj 182 299 preset.r plist param2;
 #X obj 19 255 plist plist ;
-#X connect 0 0 12 0;
-#X connect 2 0 19 0;
-#X connect 10 0 19 0;
+#X connect 2 0 21 0;
+#X connect 10 0 21 0;
 #X connect 11 0 0 0;
 #X connect 11 0 1 0;
-#X connect 13 0 19 0;
-#X connect 19 0 11 0;
+#X connect 12 0 21 0;
+#X connect 20 0 18 0;
+#X connect 20 0 19 0;
+#X connect 21 0 11 0;
+#X connect 21 0 20 0;
