@@ -18,7 +18,10 @@ plist.class.sources := preset.c
 # helpfiles, abstractions, readme
 
 datafiles = \
+$(wildcard ./examples/*.txt) \
 $(wildcard *-plugin.tcl) \
+preset.r.pd \
+preset.s.pd \
 $(wildcard *-help.pd) \
 LICENSE \
 README.md
